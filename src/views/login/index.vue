@@ -52,7 +52,9 @@
 
 <script>
 import { mobileRules, codeRules } from './rules'
+
 import { login, getCode } from '@/api'
+
 export default {
   name: 'LoginPage',
   data() {
@@ -90,6 +92,7 @@ export default {
         this.$toast.fail(message)
       }
     },
+
     // 发送验证码
     sendCode() {
       // 第一步验证手机号
@@ -113,6 +116,7 @@ export default {
         }
       })
     },
+
     // 封装一个加载提示
     loading() {
       this.$toast.loading({

@@ -18,6 +18,11 @@ export const login = (mobile, code) => {
   })
 }
 
+/**
+ *
+ * @param {String} mobile
+ * @returns Promise
+ */
 export const getCode = (mobile) => {
   return request({
     url: `/v1_0/sms/codes/${mobile}`
