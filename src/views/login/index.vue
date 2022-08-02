@@ -76,7 +76,7 @@ export default {
           data: { data }
         } = res
         this.$store.commit('SET_TOKEN', data)
-        this.$router.push('/profile')
+        this.$router.push('/my')
         this.$toast.success('登陆成功')
       } catch (e) {
         // this.$toast.fail('登陆失败')
@@ -102,7 +102,6 @@ export default {
         try {
           const res = await getCode(this.mobile)
           console.log(res)
-
           this.$toast.success('验证码发送成功')
           this.isShow = false
         } catch (e) {

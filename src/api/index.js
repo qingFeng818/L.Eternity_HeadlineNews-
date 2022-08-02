@@ -5,3 +5,6 @@ export * from './user'
 
 // 引入default 的方式
 // export { default as getUser } from './user'
+export * from './home'
+
+export * from './news'

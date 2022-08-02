@@ -1,9 +1,35 @@
 <template>
-  <div>个人中心</div>
+  <div>
+    <!-- 头部区域 -->
+    <header>
+      <div class="login" v-if="isLogin">登录的盒子</div>
+      <div class="logout" v-else>未登录盒子</div>
+    </header>
+
+    <!-- main区域 -->
+    <main>收藏/历史/消息通知/小智同学</main>
+
+    <!-- footer -->
+    <footer>
+      <button v-if="isLogin" @click="logout">退出</button>
+    </footer>
+  </div>
 </template>
 
 <script>
-export default {}
+export default {
+  computed: {
+    isLogin() {
+      return !!this.$store.state.tokenObj.token
+    }
+  },
+  methods: {
+    logout() {
+      // 清除token
+      this.$store.commit('SET_TOKEN', {})
+    }
+  }
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="less" scoped></style>
