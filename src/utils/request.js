@@ -9,7 +9,7 @@ const request = axios.create({
 // 添加请求拦截器,在数据捕获之前通过请求拦截器对请求数据进行处理，可以给所有的请求头添加一个公共的请求数据
 request.interceptors.request.use(
   function (config) {
-    const token = store.state.tokenObj.token
+    const token = 'Bearer ' + store.state.tokenObj.token
     if (token) {
       config.headers.Authorization = token
     }

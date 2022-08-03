@@ -17,28 +17,72 @@
       >
         <articleList :id="item.id"></articleList
       ></van-tab>
-      <span class="toutiao toutiao-gengduo1"></span>
+      <span class="toutiao toutiao-gengduo1" @click="showPopup"></span>
     </van-tabs>
     <!-- 文章列表 -->
 
-    <!-- main content -->
+    <!-- 弹出层 -->
+    <van-popup
+      v-model="show"
+      position="bottom"
+      :style="{ height: '100%' }"
+      closeable
+      close-icon-position="top-left"
+    >
+      <ChannelPopup
+        :myChannel="getMyChannelsList"
+        @close="show = false"
+        @change-active="active = $event"
+        @delChannl="delChannl"
+        @addChannels="addChannels"
+      ></ChannelPopup>
+    </van-popup>
   </div>
 </template>
 
 <script>
-import { getChannels, getMyChannels } from '@/api/index'
+import {
+  getChannels,
+  getMyChannels,
+  delChannels,
+  addUserChannels,
+  setMyChannelsToLocal,
+  getMyChannelsToLocal
+} from '@/api/index'
 import articleList from './components/article-list.vue'
+import ChannelPopup from './components/ChannelPopuo.vue'
 export default {
   name: 'Home',
-  components: { articleList },
+  components: { articleList, ChannelPopup },
   data() {
     return {
       active: 2,
       channelsList: [],
-      getMyChannelsList: []
+      getMyChannelsList: [],
+      show: false
+    }
+  },
+  computed: {
+    isLoginin() {
+      return !!this.$store.state.tokenObj.token
     }
   },
   methods: {
+    initChannels() {
+      // 如果用户登录了
+      if (this.isLoginin) {
+        this.getMyChannelsApi()
+      } else {
+        // 如果用户没有登录，查看本地存储中是否有内容，如果有内容的话，则添加上去，如果没有内容的话，
+        const ishasChannel = getMyChannelsToLocal()
+        if (ishasChannel) {
+          this.getMyChannelsList = ishasChannel
+        } else {
+          this.getMyChannelsApi()
+        }
+      }
+    },
+
     // 获取全部频道
     async getChannelsApi() {
       try {
@@ -58,12 +102,65 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+
+    // 控制弹出层是否显示
+    showPopup() {
+      this.show = !this.show
+    },
+    // 删除用户频道
+    async delChannl(item) {
+      this.$toast.loading({
+        message: '正在删除频道...',
+        forbidClick: true
+      })
+      const newState = this.getMyChannelsList.filter(
+        (ele) => ele.id !== item.id
+      )
+      console.log(newState)
+      try {
+        // 删除服务器数据
+
+        if (this.isLogin) {
+          await delChannels(item.id)
+        } else {
+          setMyChannelsToLocal(newState)
+        }
+
+        // 删除页面上的数据
+        this.getMyChannelsList = newState
+        this.$toast.success('删除数据成功')
+      } catch (e) {
+        this.$toast.fail('删除频道失败~')
+      }
+    },
+    // 添加用户频道
+    async addChannels(channel) {
+      try {
+        // 添加用户频道
+        this.$toast.loading({
+          message: '正在添加频道~',
+          forbidClick: true
+        })
+        if (this.isLoginin) {
+          await addUserChannels(channel.id, this.getMyChannelsList.length)
+        } else {
+          setMyChannelsToLocal([...this.getMyChannelsList, channel])
+        }
+
+        // 添加频道页面渲染
+        this.getMyChannelsList.push(channel)
+        this.$toast.success('添加频道成功')
+      } catch (e) {
+        this.$toast.fail('添加频道失败')
+      }
     }
   },
 
   created() {
     this.getChannelsApi()
-    this.getMyChannelsApi()
+    // this.getMyChannelsApi()
+    this.initChannels()
   }
 }
 </script>
@@ -120,6 +217,7 @@ export default {
 /* 字体图标 */
 :deep(.toutiao-gengduo1) {
   position: fixed;
+  z-index: 100;
   top: 92px;
   background: #fff;
   right: 0;
