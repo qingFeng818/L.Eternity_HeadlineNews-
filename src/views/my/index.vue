@@ -2,7 +2,9 @@
   <div>
     <!-- 头部区域 -->
     <header>
-      <div class="login" v-if="isLogin">登录的盒子</div>
+      <div class="login" v-if="isLogin">
+        <button @click="editUser">编辑按钮</button>
+      </div>
       <div class="logout" v-else>未登录盒子</div>
     </header>
 
@@ -27,6 +29,9 @@ export default {
     logout() {
       // 清除token
       this.$store.commit('SET_TOKEN', {})
+    },
+    editUser() {
+      this.$router.push('/user')
     }
   }
 }

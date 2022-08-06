@@ -12,7 +12,6 @@
         background="#3296fa"
       />
     </form>
-
     <!-- 搜索历史/建议/结果 -->
     <!-- is指定动态组件的名字。字符串，并且名字存在计算属性中 -->
     <component :is="componentName" :keywords="keywords"></component>
@@ -45,7 +44,10 @@ export default {
     onSearchFocus() {
       this.isShowSearchResult = false
     },
-    onCancel() {}
+
+    onCancel() {
+      this.$router.go(-1)
+    }
   },
 
   computed: {
