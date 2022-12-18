@@ -53,3 +53,35 @@ export const uploadAvator = (file) => {
     timeout: 10000
   })
 }
+
+export const uploadUser = (data) =>
+  request({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data
+  })
+
+export const followUser = (id) =>
+  request({
+    url: '/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target: id
+    }
+  })
+
+export const delfollowUser = (target) =>
+  request({
+    url: `/v1_0/user/followings/${target}`,
+    method: 'DELETE'
+  })
+
+export const followList = (page, perPage) => {
+  return request({
+    url: '/v1_0/user/followings',
+    params: {
+      page,
+      per_page: perPage
+    }
+  })
+}

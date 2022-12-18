@@ -11,3 +11,14 @@ export const getSearchSuggetionsApi = (q) => {
     params: { q }
   })
 }
+
+export const getSearchResultApi = (page, perpage, q) => {
+  return request({
+    url: '/v1_0/search',
+    params: {
+      page,
+      per_page: perpage,
+      q
+    }
+  })
+}

@@ -22,7 +22,9 @@ export default {
     }
   },
   methods: {
-    oncancle() {},
+    oncancle() {
+      this.$parent.$parent.isShowAvator = false
+    },
 
     // 上传头像
     onconfirm() {

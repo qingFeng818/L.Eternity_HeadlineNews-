@@ -80,16 +80,7 @@ export default {
         this.$toast.success('登陆成功')
       } catch (e) {
         // this.$toast.fail('登陆失败')
-        console.log(e)
-        const status = e.response.status
-        let message = ''
-        if (status === 400) {
-          message = e.response.data.message
-        }
-        if (status === 507) {
-          message = e.response.data.message
-        }
-        this.$toast.fail(message)
+        this.$toast.fail('登录失败，请重新登录')
       }
     },
 
@@ -105,13 +96,7 @@ export default {
           this.$toast.success('验证码发送成功')
           this.isShow = false
         } catch (e) {
-          console.log(e)
-          const status = e.response.status
-          let message = '手机号不正确'
-          if (status === 429) {
-            message = e.response.data.message
-          }
-          this.$toast.fail(message)
+          this.$toast.fail('发送失败，请重新发送')
         }
       })
     },

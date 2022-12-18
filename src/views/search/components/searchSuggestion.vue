@@ -4,6 +4,7 @@
       v-for="(item, index) in highLightSuggestions"
       :key="index"
       icon="search"
+      @click="searchSuggest(item)"
     >
       <template #title>
         <span v-html="item"></span>
@@ -39,14 +40,29 @@ export default {
     // 单一职责原则
     // 设计模式的原则：
     // 单一原则，里氏替换原则，依赖倒置原则，接口隔离原则，
+
+    // 引入了debouch
     getSearchSuggetions: debounce(async function () {
       try {
         const res = await getSearchSuggetionsApi(this.keywords)
+        console.log(res)
         this.searchSuggestList = res.data.data.options.filter(Boolean)
       } catch (e) {
         this.$toast.fail('获取搜索建议失败')
       }
-    }, 300)
+    }, 300),
+
+    // 将推荐信息填充至搜索框
+    searchSuggest(val) {
+      const reg = new RegExp('<span style="color:red">', 'g') // eslint-disable-line
+      const str = new RegExp('</span>', 'g') // eslint-disable-line
+      val = val.replace(reg, '')
+      val = val.replace(str, '')
+      console.log(val)
+
+      this.$parent.keywords = val
+      this.$parent.onSearch()
+    }
   },
   created() {
     this.getSearchSuggetions()
@@ -71,13 +87,12 @@ export default {
     // }
     highLightSuggestions() {
       const reg = new RegExp(this.keywords, 'ig')
-
       return this.searchSuggestList.map((str) =>
-        str.replace(reg, (match) => `<span>${match}</span>`)
+        str.replace(reg, (match) => `<span style="color:red">${match}</span>`)
       )
     }
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="less" scoped></style>

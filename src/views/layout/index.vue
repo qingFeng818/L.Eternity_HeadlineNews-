@@ -1,7 +1,9 @@
 <template>
   <div>
     <!-- 二级路由 -->
-    <router-view></router-view>
+    <transition :name="transitionname">
+      <router-view class="child-view"></router-view>
+    </transition>
     <!-- 底部导航 -->
     <van-tabbar route>
       <van-tabbar-item
@@ -42,7 +44,19 @@ export default {
           icon: 'toutiao-wode',
           text: '我的'
         }
-      ]
+      ],
+      transitionname: 'slide-left'
+    }
+  },
+  watch: {
+    $route(to, from) {
+      console.log(to, 'to')
+      console.log(from, 'from')
+      if (to.meta.index > from.meta.index) {
+        this.transitionname = 'slide-left'
+      } else {
+        this.transitionname = 'slide-right'
+      }
     }
   }
 }
@@ -56,5 +70,28 @@ export default {
   span {
     font-size: 30px;
   }
+}
+
+.child-view {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.6s cubic-bezier(0.55, 0, 0.1, 1);
+}
+.slide-left-enter,
+.slide-right-leave-active {
+  opacity: 0;
+  -webkit-transform: translate(50%, 0);
+  overflow: hidden;
+  transform: translate(50%, 0);
+}
+.slide-left-leave-active,
+.slide-right-enter {
+  opacity: 0;
+  -webkit-transform: translate(-50%, 0);
+  overflow: hidden;
+  transform: translate(-50%, 0);
 }
 </style>

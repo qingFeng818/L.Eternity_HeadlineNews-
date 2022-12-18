@@ -14,7 +14,9 @@
     </form>
     <!-- 搜索历史/建议/结果 -->
     <!-- is指定动态组件的名字。字符串，并且名字存在计算属性中 -->
-    <component :is="componentName" :keywords="keywords"></component>
+    <transition name="component-fade" mode="out-in">
+      <component :is="componentName" :keywords="keywords"></component>
+    </transition>
   </div>
 </template>
 
@@ -22,31 +24,48 @@
 import searchHistory from './components/SearchHistory.vue'
 import searchResult from './components/searchResult.vue'
 import searchSuggest from './components/searchSuggestion.vue'
+import { getHistory, setHistory } from '@/utils/authors'
+
 // import { getSearchSuggetionsApi } from '@/api'
 
 export default {
-  components: { searchHistory, searchResult, searchSuggest },
+  components: {
+    searchHistory,
+    searchResult,
+    searchSuggest
+  },
   name: 'search',
   data() {
     return {
       search: '',
       keywords: '',
       //   用一个变量定义用户是否敲回车
-      isShowSearchResult: false
+      isShowSearchResult: false,
+      historyList: getHistory() || []
     }
   },
   methods: {
     onSearch() {
-      console.log('正在搜索')
+      const flag = this.historyList.some((item) => {
+        return item === this.keywords
+      })
+      if (!flag) {
+        this.historyList.unshift(this.keywords)
+        setHistory(this.historyList)
+      }
       this.isShowSearchResult = true
     },
-
     onSearchFocus() {
       this.isShowSearchResult = false
     },
 
     onCancel() {
-      this.$router.go(-1)
+      this.$router.push('/ ')
+    },
+    readInfo() {
+      console.log(1)
+
+      // 跳往响应页面
     }
   },
 
@@ -71,5 +90,13 @@ export default {
   [role='button'] {
     color: #fff;
   }
+}
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 1.6s ease;
+}
+.component-fade-enter, .component-fade-leave-to
+/* .component-fade-leave-active for below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

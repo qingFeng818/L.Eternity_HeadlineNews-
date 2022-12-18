@@ -114,6 +114,7 @@ export default {
     showPopup() {
       this.show = !this.show
     },
+
     // 删除用户频道
     async delChannl(item) {
       this.$toast.loading({
@@ -140,6 +141,7 @@ export default {
         this.$toast.fail('删除频道失败~')
       }
     },
+
     // 添加用户频道
     async addChannels(channel) {
       try {

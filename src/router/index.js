@@ -16,25 +16,37 @@ const routes = [
   {
     path: '/',
     component: () => import('@/views/layout'),
-    redirect: '/ ',
+    redirect: '/my',
     children: [
       // 如果子路由的path没有/，会把父亲的path和儿子的path进行拼接
       // 如果有/，不会拼接
       {
         path: '/ ',
-        component: () => import('@/views/Home')
+        component: () => import('@/views/Home'),
+        meta: {
+          index: 1
+        }
       },
       {
         path: ' /qa',
-        component: () => import('@/views/QA')
+        component: () => import('@/views/QA'),
+        meta: {
+          index: 3
+        }
       },
       {
         path: ' /video',
-        component: () => import('@/views/Video')
+        component: () => import('@/views/Video'),
+        meta: {
+          index: 2
+        }
       },
       {
         path: ' /my',
-        component: () => import('@/views/my')
+        component: () => import('@/views/my'),
+        meta: {
+          index: 4
+        }
       }
     ]
   },
@@ -47,6 +59,11 @@ const routes = [
   {
     path: '/user',
     component: () => import('@/views/user')
+  },
+
+  {
+    path: '/detail',
+    component: () => import('@/views/Detail')
   }
 ]
 
